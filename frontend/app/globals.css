@@ -12,15 +12,28 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* The app is designed light-only: inputs live on white cards, so keep
+   text dark even when the user's OS is in dark mode. */
+input,
+textarea,
+select {
+  color: #1c1c1c;
+  background-color: #ffffff;
+}
+
+/* Fix Chrome/Safari autofill painting inputs white-on-white */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #1c1c1c;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+}
+
