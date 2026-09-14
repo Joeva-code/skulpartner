@@ -1,0 +1,375 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String     @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String     @unique
+  phone         String?    @unique
+  passwordHash  String
+  role          UserRole   @default(PARENT)
+  emailVerified Boolean    @default(false)
+  phoneVerified Boolean    @default(false)
+  status        UserStatus @default(ACTIVE)
+  lastLoginAt   DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  beneficiaries  Beneficiary[]
+  nextOfKins     NextOfKin[]
+  kycSubmissions KycSubmission[]
+  consentLogs    ConsentLog[]
+  otps           Otp[]
+  investments    Investment[]
+  wallets        Wallet[]
+  notifications  Notification[]
+  receipts       Receipt[]
+}
+
+enum UserRole {
+  PARENT
+  ADMIN
+  SCHOOL
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  FROZEN
+  CLOSED
+}
+
+model School {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  city      String?
+  state     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  beneficiaries Beneficiary[]
+}
+
+model Beneficiary {
+  id        String            @id @default(cuid())
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  firstName String
+  lastName  String
+  dob       DateTime?
+  school    School?           @relation(fields: [schoolId], references: [id])
+  schoolId  String?
+  grade     String?
+  annualFee Decimal           @default(0) @db.Decimal(18, 2)
+  status    BeneficiaryStatus @default(ACTIVE)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([schoolId])
+}
+
+enum BeneficiaryStatus {
+  ACTIVE
+  GRADUATED
+  TRANSFERRED
+  DECEASED
+}
+
+model KycSubmission {
+  id             String    @id @default(cuid())
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  bvn            String?
+  nin            String?
+  idType         String?
+  idNumber       String?
+  idDocumentUrl  String?
+  utilityBillUrl String?
+  status         KycStatus @default(PENDING)
+  submittedAt    DateTime?
+  reviewedAt     DateTime?
+  reviewNote     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  FAILED
+}
+
+model NextOfKin {
+  id                String   @id @default(cuid())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  fullName          String
+  relationship      String
+  phone             String?
+  email             String?
+  bankName          String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ConsentLog {
+  id             String   @id @default(cuid())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  termsVersion   String
+  privacyVersion String
+  consentedAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Otp {
+  id         String     @id @default(cuid())
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  channel    OtpChannel
+  purpose    OtpPurpose
+  codeHash   String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime   @default(now())
+
+  @@index([userId])
+}
+
+enum OtpChannel {
+  EMAIL
+  PHONE
+}
+
+enum OtpPurpose {
+  VERIFY_EMAIL
+  VERIFY_PHONE
+  LOGIN
+  RESET_PASSWORD
+}
+
+model Investment {
+  id                String           @id @default(cuid())
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String
+  status            InvestmentStatus @default(DRAFT)
+  annualFees        Decimal          @db.Decimal(18, 2)
+  principal         Decimal          @db.Decimal(18, 2)
+  insuranceFee      Decimal          @db.Decimal(18, 2)
+  maintenanceFee    Decimal          @db.Decimal(18, 2)
+  totalUpfront      Decimal          @db.Decimal(18, 2)
+  currentCycleNumber Int              @default(1)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  cycles  Cycle[]
+  payouts Payout[]
+
+  @@index([userId])
+}
+
+enum InvestmentStatus {
+  DRAFT
+  PENDING_APPROVAL
+  ACTIVE
+  COMPLETED
+  REJECTED
+  SUSPENDED
+}
+
+model Cycle {
+  id               String      @id @default(cuid())
+  investment       Investment  @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  investmentId     String
+  cycleNumber      Int
+  startDate        DateTime
+  endDate          DateTime
+  days             Int
+  dailyRoi         Decimal     @db.Decimal(6, 4)
+  termFeeTarget    Decimal     @db.Decimal(18, 2)
+  amountAchieved   Decimal?    @db.Decimal(18, 2)
+  profitEarned     Decimal?    @db.Decimal(18, 2)
+  payoutCommission Decimal?    @db.Decimal(18, 2)
+  netBalance       Decimal?    @db.Decimal(18, 2)
+  status           CycleStatus @default(ACTIVE)
+  createdAt        DateTime    @default(now())
+
+  @@unique([investmentId, cycleNumber])
+  @@index([investmentId])
+}
+
+enum CycleStatus {
+  UPCOMING
+  ACTIVE
+  COMPLETED
+}
+
+model Wallet {
+  id        String        @id @default(cuid())
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  type      WalletType
+  balance   Decimal       @default(0) @db.Decimal(18, 2)
+  updatedAt DateTime      @updatedAt
+
+  transactions WalletTransaction[]
+
+  @@unique([userId, type])
+  @@index([userId])
+}
+
+enum WalletType {
+  INVESTMENT
+  SCHOOL
+}
+
+model WalletTransaction {
+  id          String         @id @default(cuid())
+  wallet      Wallet         @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  walletId    String
+  type        WalletTxType   @default(OTHER)
+  amount      Decimal        @db.Decimal(18, 2)
+  reference   String         @unique
+  status      WalletTxStatus @default(SUCCESSFUL)
+  description String?
+  createdAt   DateTime       @default(now())
+
+  @@index([walletId])
+  @@index([createdAt])
+}
+
+enum WalletTxType {
+  INVESTMENT
+  RETURN
+  PAYOUT
+  SCHOOL_FEE
+  INSURANCE
+  MAINTENANCE
+  OTHER
+}
+
+enum WalletTxStatus {
+  PENDING
+  SUCCESSFUL
+  FAILED
+}
+
+model Notification {
+  id        String             @id @default(cuid())
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  type      NotificationType   @default(PAYMENT)
+  title     String
+  body      String
+  status    NotificationStatus @default(UNREAD)
+  createdAt DateTime           @default(now())
+
+  @@index([userId])
+}
+
+enum NotificationType {
+  PAYMENT
+  CYCLE_MILESTONE
+  INVESTMENT
+  GRACE_WARNING
+  COMPLIANCE
+  MONTHLY_REPORT
+  SUPPORT
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  IMPORTANT
+  WARNING
+}
+
+model Receipt {
+  id        String       @id @default(cuid())
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  type      ReceiptType
+  amount    Decimal      @db.Decimal(18, 2)
+  reference String       @unique
+  url       String?
+  createdAt DateTime     @default(now())
+
+  @@index([userId])
+}
+
+enum ReceiptType {
+  PAYMENT
+  SCHOOL_FEE
+  WITHDRAWAL
+}
+
+model Payout {
+  id           String       @id @default(cuid())
+  investment   Investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
+  investmentId String
+  amount       Decimal      @db.Decimal(18, 2)
+  status       PayoutStatus @default(PENDING)
+  reference    String?
+  processedAt  DateTime?
+  createdAt    DateTime     @default(now())
+
+  @@index([investmentId])
+}
+
+enum PayoutStatus {
+  PENDING
+  REVIEW
+  APPROVED
+  PROCESSED
+  COMPLETED
+  FAILED
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorRole String?
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([actorId])
+}
+
+model AppSettings {
+  id             Int      @id @default(1)
+  maintenanceFee Decimal  @default(4500) @db.Decimal(18, 2)
+  dailyRoiMin    Decimal  @default(0.008) @db.Decimal(6, 4)
+  dailyRoiMax    Decimal  @default(0.01) @db.Decimal(6, 4)
+  cycle1Days     Int      @default(123)
+  cycle2Days     Int      @default(121)
+  cycle3Days     Int      @default(121)
+  aLevelDays1    Int      @default(183)
+  aLevelDays2    Int      @default(182)
+  updatedAt      DateTime @updatedAt
+}
