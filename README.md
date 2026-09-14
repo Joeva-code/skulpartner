@@ -30,7 +30,7 @@ npm run start:dev      # API on http://localhost:4000
 
 ```bash
 cd frontend
-cp .env.example .env.local   # optional; defaults to http://localhost:4000
+cp .env.example .env.local   # optional; defaults to https://skulpartner.onrender.com
 npm install
 npm run dev                  # app on http://localhost:3000
 ```
@@ -40,9 +40,9 @@ npm run dev                  # app on http://localhost:3000
 Backend (`backend/.env`) — see `backend/.env.example`.
 Frontend (`frontend/.env.local`) — see `frontend/.env.example`:
 
-| Variable              | Purpose                          | Default               |
-| --------------------- | -------------------------------- | --------------------- |
-| `NEXT_PUBLIC_API_URL` | Base URL of the backend API      | `http://localhost:4000` |
+| Variable              | Purpose                          | Default                          |
+| --------------------- | -------------------------------- | -------------------------------- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the backend API      | `https://skulpartner.onrender.com` |
 
 ## Scripts
 
