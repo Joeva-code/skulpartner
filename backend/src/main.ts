@@ -14,7 +14,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://skulpartner.onrender.com',
+      'https://skulpartner-1.onrender.com',
       ...allowedOrigins,
     ],
     credentials: true,
