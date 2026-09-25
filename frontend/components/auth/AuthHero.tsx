@@ -3,13 +3,13 @@ import Link from 'next/link';
 const steps = [
   {
     num: '01',
-    title: 'Invest 70% upfront',
+    title: 'Contribute 70% upfront',
     text: 'We compute 70% of annual fees + insurance + maintenance.',
   },
   {
     num: '02',
-    title: 'Watch it grow daily',
-    text: 'Earn 0.8%–1% daily with live cycle tracking on your dashboard.',
+    title: 'Track your progress',
+    text: 'Follow your contribution progress and school-fee targets on your dashboard.',
   },
   {
     num: '03',
@@ -54,9 +54,9 @@ export default function AuthHero() {
           </h2>
 
           <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-300">
-            Invest once upfront, track daily growth, and let SKULPARTNERS
-            release every term&apos;s school fees on time — with receipts and
-            full transparency.
+            Contribute once upfront, track your education funding progress, and
+            let SKULPARTNERS release every term&apos;s school fees on time —
+            with receipts and full transparency.
           </p>
 
           {/* steps */}

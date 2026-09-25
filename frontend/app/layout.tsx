@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SKULPARTNERS — Pay Once, Study Free",
   description:
-    "SKULPARTNERS helps parents and guardians invest today for their children's education. We manage your school fees through smart investments.",
+    "SKULPARTNERS helps parents and guardians contribute toward their children's education. Track your contributions and let us pay school fees term by term.",
   icons: {
     icon: "/images/skulpartner_logo.svg",
   },

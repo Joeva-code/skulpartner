@@ -31,11 +31,11 @@ export default function TermsPage() {
               1. What SKULPARTNERS does
             </h2>
             <p className="mt-2">
-              SKULPARTNERS is an education finance platform built around a
-              “Pay Once, Study Free” model. Parents and guardians invest
-              upfront, the investment earns a configurable daily return, and
-              termly school fees are released to the child&apos;s school
-              according to the investment cycle.
+              SKULPARTNERS is an education contribution and school-fee funding
+              platform built around a “Pay Once, Study Free” model. Parents and
+              guardians make a contribution upfront, SKULPARTNERS manages the
+              education fund, and termly school fees are released to the
+              child&apos;s school according to the contribution cycle.
             </p>
           </section>
 
@@ -53,14 +53,14 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-base font-bold text-[#1c1c1c]">
-              3. Investment and fees
+              3. Contribution and fees
             </h2>
             <p className="mt-2">
-              The investment principal is 70% of the beneficiary&apos;s annual
-              school fees, plus an insurance fee of 1.5% of the principal and a
-              one-off maintenance fee. The exact total is always shown in the
-              investment breakdown before you pay. Investment returns vary by
-              cycle and are not guaranteed.
+              The contribution amount is 70% of the beneficiary&apos;s annual
+              school fees, plus an insurance fee of 1.5% of the contribution
+              and a one-off maintenance fee. The exact total is always shown in
+              the contribution breakdown before you pay. Contribution schedules
+              and school-fee targets vary by cycle.
             </p>
           </section>
 

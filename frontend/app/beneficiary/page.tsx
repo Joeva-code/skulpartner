@@ -92,7 +92,7 @@ export default function BeneficiaryPage() {
     <WizardCard
       step={3}
       title="Your child (beneficiary)"
-      subtitle="Add the student(s) this investment covers. You can add more than one."
+      subtitle="Add the student(s) your contributions will cover. You can add more than one."
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">

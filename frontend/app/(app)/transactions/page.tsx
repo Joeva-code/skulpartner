@@ -11,7 +11,7 @@ export default function TransactionsPage() {
         <h2 className="mt-3 text-lg font-bold">No transactions yet</h2>
 
         <p className="mt-1 text-sm text-gray-500">
-          Investments, school-fee payments, fees and insurance will show up
+          Contributions, school-fee payments, fees and insurance will show up
           here with filters and statements.
         </p>
       </div>

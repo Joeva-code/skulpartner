@@ -31,7 +31,7 @@ model User {
   kycSubmissions KycSubmission[]
   consentLogs    ConsentLog[]
   otps           Otp[]
-  investments    Investment[]
+  contributions  Contribution[]
   wallets        Wallet[]
   notifications  Notification[]
   receipts       Receipt[]
@@ -169,54 +169,60 @@ enum OtpPurpose {
   RESET_PASSWORD
 }
 
-model Investment {
-  id                String           @id @default(cuid())
-  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String
-  status            InvestmentStatus @default(DRAFT)
-  annualFees        Decimal          @db.Decimal(18, 2)
-  principal         Decimal          @db.Decimal(18, 2)
-  insuranceFee      Decimal          @db.Decimal(18, 2)
-  maintenanceFee    Decimal          @db.Decimal(18, 2)
-  totalUpfront      Decimal          @db.Decimal(18, 2)
-  currentCycleNumber Int              @default(1)
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+/// Contribution: a parent/guardian's education contribution towards a
+/// beneficiary's school fees. The database table keeps its historical
+/// "Investment" name (via @@map) so existing records are preserved.
+model Contribution {
+  id                 String             @id @default(cuid())
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  status             ContributionStatus @default(DRAFT)
+  annualFees         Decimal            @db.Decimal(18, 2)
+  contributionAmount Decimal            @map("principal") @db.Decimal(18, 2)
+  insuranceFee       Decimal            @db.Decimal(18, 2)
+  maintenanceFee     Decimal            @db.Decimal(18, 2)
+  totalUpfront       Decimal            @db.Decimal(18, 2)
+  currentCycleNumber Int                @default(1)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 
   cycles  Cycle[]
   payouts Payout[]
 
   @@index([userId])
+  @@map("Investment")
 }
 
-enum InvestmentStatus {
+enum ContributionStatus {
   DRAFT
   PENDING_APPROVAL
   ACTIVE
   COMPLETED
   REJECTED
   SUSPENDED
+
+  @@map("InvestmentStatus")
 }
 
 model Cycle {
-  id               String      @id @default(cuid())
-  investment       Investment  @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  investmentId     String
-  cycleNumber      Int
-  startDate        DateTime
-  endDate          DateTime
-  days             Int
-  dailyRoi         Decimal     @db.Decimal(6, 4)
-  termFeeTarget    Decimal     @db.Decimal(18, 2)
-  amountAchieved   Decimal?    @db.Decimal(18, 2)
-  profitEarned     Decimal?    @db.Decimal(18, 2)
-  payoutCommission Decimal?    @db.Decimal(18, 2)
-  netBalance       Decimal?    @db.Decimal(18, 2)
-  status           CycleStatus @default(ACTIVE)
-  createdAt        DateTime    @default(now())
+  id                 String       @id @default(cuid())
+  contribution       Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  contributionId     String       @map("investmentId")
+  cycleNumber        Int
+  startDate          DateTime
+  endDate            DateTime
+  days               Int
+  dailyGrowthRate    Decimal      @map("dailyRoi") @db.Decimal(6, 4)
+  termFeeTarget      Decimal      @db.Decimal(18, 2)
+  amountAchieved     Decimal?     @db.Decimal(18, 2)
+  growthEarned       Decimal?     @map("profitEarned") @db.Decimal(18, 2)
+  payoutCommission   Decimal?     @db.Decimal(18, 2)
+  netBalance         Decimal?     @db.Decimal(18, 2)
+  status             CycleStatus  @default(ACTIVE)
+  createdAt          DateTime     @default(now())
 
-  @@unique([investmentId, cycleNumber])
-  @@index([investmentId])
+  @@unique([contributionId, cycleNumber])
+  @@index([contributionId])
 }
 
 enum CycleStatus {
@@ -240,7 +246,7 @@ model Wallet {
 }
 
 enum WalletType {
-  INVESTMENT
+  CONTRIBUTION @map("INVESTMENT")
   SCHOOL
 }
 
@@ -260,8 +266,8 @@ model WalletTransaction {
 }
 
 enum WalletTxType {
-  INVESTMENT
-  RETURN
+  CONTRIBUTION @map("INVESTMENT")
+  REFUND       @map("RETURN")
   PAYOUT
   SCHOOL_FEE
   INSURANCE
@@ -291,7 +297,7 @@ model Notification {
 enum NotificationType {
   PAYMENT
   CYCLE_MILESTONE
-  INVESTMENT
+  CONTRIBUTION @map("INVESTMENT")
   GRACE_WARNING
   COMPLIANCE
   MONTHLY_REPORT
@@ -325,16 +331,16 @@ enum ReceiptType {
 }
 
 model Payout {
-  id           String       @id @default(cuid())
-  investment   Investment   @relation(fields: [investmentId], references: [id], onDelete: Cascade)
-  investmentId String
-  amount       Decimal      @db.Decimal(18, 2)
-  status       PayoutStatus @default(PENDING)
-  reference    String?
-  processedAt  DateTime?
-  createdAt    DateTime     @default(now())
+  id             String       @id @default(cuid())
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  contributionId String       @map("investmentId")
+  amount         Decimal      @db.Decimal(18, 2)
+  status         PayoutStatus @default(PENDING)
+  reference      String?
+  processedAt    DateTime?
+  createdAt      DateTime     @default(now())
 
-  @@index([investmentId])
+  @@index([contributionId])
 }
 
 enum PayoutStatus {
@@ -364,8 +370,8 @@ model AuditLog {
 model AppSettings {
   id             Int      @id @default(1)
   maintenanceFee Decimal  @default(4500) @db.Decimal(18, 2)
-  dailyRoiMin    Decimal  @default(0.008) @db.Decimal(6, 4)
-  dailyRoiMax    Decimal  @default(0.01) @db.Decimal(6, 4)
+  dailyGrowthRateMin Decimal @default(0.008) @map("dailyRoiMin") @db.Decimal(6, 4)
+  dailyGrowthRateMax Decimal @default(0.01) @map("dailyRoiMax") @db.Decimal(6, 4)
   cycle1Days     Int      @default(123)
   cycle2Days     Int      @default(121)
   cycle3Days     Int      @default(121)

@@ -80,17 +80,18 @@ export default function DashboardPage() {
         <div className="rounded-3xl border-2 border-dashed border-gray-300 bg-white p-8 text-center">
           <p className="text-3xl">💼</p>
 
-          <h2 className="mt-3 text-lg font-bold">No investment yet</h2>
+          <h2 className="mt-3 text-lg font-bold">No contributions yet</h2>
 
           <p className="mt-1 text-sm text-gray-500">
-            Set up your school-fee investment to start earning daily returns.
+            Set up your school-fee contribution plan to start funding your
+            child&apos;s education.
           </p>
 
           <a
             href="#"
             className="mt-4 inline-block rounded-xl bg-[#1c1c1c] px-5 py-3 text-sm font-semibold text-white"
           >
-            Set up investment (coming soon)
+            Set up contribution (coming soon)
           </a>
         </div>
 
@@ -100,7 +101,7 @@ export default function DashboardPage() {
           <h2 className="mt-3 text-lg font-bold">Wallet coming soon</h2>
 
           <p className="mt-1 text-sm text-gray-500">
-            Your investment and school-fee wallets will appear here.
+            Your contribution and school-fee wallets will appear here.
           </p>
         </div>
       </div>

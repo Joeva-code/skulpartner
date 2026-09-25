@@ -35,7 +35,7 @@ export default function PrivacyPage() {
               verification data (OTP confirmations), KYC details (BVN, NIN,
               government ID and utility bill), beneficiary and school details,
               next-of-kin and bank details, and transaction records needed to
-              operate investments and school-fee payments.
+              operate contributions and school-fee payments.
             </p>
           </section>
 
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
             <p className="mt-2">
               Your data is processed in line with the Nigeria Data Protection
               Regulation (NDPR) to create and secure your account, verify your
-              identity under KYC/AML requirements, manage investments and
+              identity under KYC/AML requirements, manage contributions and
               payouts, issue receipts, and meet audit and regulatory
               obligations.
             </p>

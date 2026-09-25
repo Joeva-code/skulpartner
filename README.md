@@ -1,8 +1,9 @@
 # SKULPARTNERS
 
-Education finance platform built around a **"Pay Once, Study Free"** model.
-Parents/guardians invest upfront, the investment grows over fixed cycles, and
-termly school fees are released to the child's school.
+Education contribution and school-fee funding platform built around a
+**"Pay Once, Study Free"** model. Parents/guardians contribute upfront,
+SKULPARTNERS manages the education fund over fixed cycles, and termly school
+fees are released to the child's school.
 
 Monorepo:
 

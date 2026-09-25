@@ -11,8 +11,8 @@ export default function SchoolFeesPage() {
         <h2 className="mt-3 text-lg font-bold">Nothing here yet</h2>
 
         <p className="mt-1 text-sm text-gray-500">
-          Once you set up an investment, your termly school-fee payments will
-          appear here.
+          Once you set up your contribution plan, your termly school-fee
+          payments will appear here.
         </p>
       </div>
     </section>

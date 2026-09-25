@@ -12,9 +12,9 @@ const features = [
   },
   {
     icon: "🐷",
-    title: "Smart Investment",
+    title: "Smart Contributions",
     description:
-      "Grow your money while securing your child’s education.",
+      "Contribute toward school fees while securing your child’s education.",
   },
   {
     icon: "🎓",
@@ -41,13 +41,13 @@ const howItWorks = [
     step: "02",
     title: "Add your child & fees",
     description:
-      "Tell us the school and annual fees. We compute a 70% investment requirement automatically.",
+      "Tell us the school and annual fees. We compute a 70% contribution target automatically.",
   },
   {
     step: "03",
-    title: "Pay once, invest",
+    title: "Contribute once",
     description:
-      "Pay your investment upfront via card, transfer or USSD, and your cycle starts earning daily.",
+      "Make your contribution upfront via card, transfer or USSD, and we schedule your child's school-fee payments.",
   },
   {
     step: "04",
@@ -61,27 +61,27 @@ const faqs = [
   {
     question: "How does “Pay Once, Study Free” work?",
     answer:
-      "Instead of saving separately for each term, you invest 70% of your child's annual school fees upfront. Your money earns a daily return, and each term we use the returns to cover the school fees.",
+      "Instead of saving separately for each term, you make a single contribution covering 70% of your child's annual school fees upfront. SKULPARTNERS holds that fund and releases each term's school fees to your child's school.",
   },
   {
     question: "Is my money safe?",
     answer:
-      "We follow Nigerian compliance practices — including AML/KYC verification, NDIC and SCUML-aligned processes and NDPR data protection — and every transaction is recorded for audit. Always invest only what you can afford.",
+      "We follow Nigerian compliance practices — including AML/KYC verification, NDIC and SCUML-aligned processes and NDPR data protection — and every transaction is recorded for audit. Always contribute only what you can afford.",
   },
   {
     question: "What are the fees?",
     answer:
-      "You pay your investment principal (70% of annual fees), plus an insurance fee of 1.5% of the principal and a one-off maintenance fee. The exact maintenance fee is shown before you pay, so there are no surprises.",
+      "Your contribution is 70% of annual fees, plus an insurance fee of 1.5% of the contribution and a one-off maintenance fee. The exact maintenance fee is shown before you pay, so there are no surprises.",
   },
   {
-    question: "How much do I earn daily?",
+    question: "How much do I need to contribute?",
     answer:
-      "Your investment earns a daily return in the range of 0.8% to 1% of your principal, depending on the current cycle. Your dashboard shows your daily and total profit in real time.",
+      "Your contribution target is 70% of your child's annual school fees. Your dashboard shows your contribution amount, how much you have contributed, and how much remains toward the school-fee target.",
   },
   {
     question: "Can I track my money?",
     answer:
-      "Yes. Your dashboard shows your investment balance, wallet, daily and total profit, cycle progress, and a full transaction history with downloadable statements.",
+      "Yes. Your dashboard shows your contributions, your wallet, contribution progress, your school-fee target, and a full transaction history with downloadable statements.",
   },
   {
     question: "What happens when a term is paid?",
@@ -96,7 +96,7 @@ const faqs = [
   {
     question: "What happens to my remaining funds?",
     answer:
-      "Any surplus from your investment remains in your wallet. On graduation, remaining funds move to a communal pool per our product terms.",
+      "Any surplus from your contribution remains in your wallet. On graduation, remaining funds move to a communal pool per our product terms.",
   },
 ];
 
@@ -237,10 +237,10 @@ export default function HomePage() {
           </h1>
 
           <p className="mt-5 max-w-[390px] text-[13px] leading-[1.65] text-slate-500">
-            SKULPARTNERS helps parents and guardians invest today for
-            their children&apos;s education. We manage your school fees
-            through smart investments, so your child can focus on what
-            matters most — learning.
+            SKULPARTNERS helps parents and guardians contribute today
+            toward their children&apos;s education. We manage your school
+            fees through planned contributions, so your child can focus on
+            what matters most — learning.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -293,7 +293,7 @@ export default function HomePage() {
               </h2>
 
               <p className="mt-1 text-[8px] text-slate-500">
-                Invest • Track • Pay School Fees
+                Contribute • Track • Pay School Fees
               </p>
             </div>
           </div>
@@ -396,9 +396,9 @@ export default function HomePage() {
             </h2>
 
             <p className="mt-4 text-[13px] leading-relaxed text-slate-500">
-              No hidden fees. Your investment is broken down clearly before you
-              pay, and your returns are tracked daily. Here is an illustrative
-              example of the standard model:
+              No hidden fees. Your contribution is broken down clearly before
+              you pay, and your education funding progress is tracked. Here is
+              an illustrative example of the standard model:
             </p>
 
             <ul className="mt-6 space-y-3 text-[13px] text-slate-600">
@@ -412,19 +412,19 @@ export default function HomePage() {
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d9f3e7] text-[10px] font-bold text-[#08794d]">
                   ✓
                 </span>
-                70% investment requirement — ₦104,300
+                Contribution target (70%) — ₦104,300
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d9f3e7] text-[10px] font-bold text-[#08794d]">
                   ✓
                 </span>
-                Daily return at 0.8% — ₦837.20
+                Contribution plan — 123-day cycle
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d9f3e7] text-[10px] font-bold text-[#08794d]">
                   ✓
                 </span>
-                Cycle 1 total profit (123 days) — ₦102,975.60
+                Total to pay today — ₦110,364.50
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d9f3e7] text-[10px] font-bold text-[#08794d]">
@@ -443,7 +443,7 @@ export default function HomePage() {
 
           <div className="rounded-3xl bg-white p-8 shadow-sm">
             <h3 className="text-lg font-extrabold text-[#09252a]">
-              Investment breakdown
+              Contribution breakdown
             </h3>
 
             <p className="mt-1 text-xs text-slate-500">
@@ -457,7 +457,7 @@ export default function HomePage() {
               </div>
 
               <div className="flex items-center justify-between">
-                <dt className="text-slate-500">Investment (70%)</dt>
+                <dt className="text-slate-500">Contribution (70%)</dt>
                 <dd className="font-bold">₦104,300</dd>
               </div>
 
@@ -605,10 +605,10 @@ export default function HomePage() {
           </nav>
 
           <p className="max-w-[720px] text-center text-[11px] leading-relaxed text-slate-400">
-            SKULPARTNERS is an education finance platform. Compliance
-            statements are based on product requirements and are not
-            independently verified regulatory claims. Investments carry risk
-            and returns are not guaranteed.
+            SKULPARTNERS is an education contribution and school-fee funding
+            platform. Compliance statements are based on product requirements
+            and are not independently verified regulatory claims. Contribution
+            and school-fee figures shown are illustrative and configurable.
           </p>
 
           <p className="text-[11px] text-slate-400">

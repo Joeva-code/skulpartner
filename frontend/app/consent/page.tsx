@@ -49,8 +49,8 @@ export default function ConsentPage() {
         <div className="space-y-3 rounded-2xl border border-gray-200 p-4 text-sm text-gray-600">
           <p>
             <strong>Terms of Service:</strong> By creating an account you agree
-            to use SKULPARTNERS for education fee investment and understand
-            that investment returns vary.
+            to use SKULPARTNERS to make education contributions toward school
+            fees and to the contribution terms shown during onboarding.
           </p>
 
           <p>

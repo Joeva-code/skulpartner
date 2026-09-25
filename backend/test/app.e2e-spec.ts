@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
@@ -20,7 +22,12 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        expect(res.body).toMatchObject({
+          message: 'SKULPARTNERS backend is connected to Neon',
+        });
+        expect(typeof res.body.userCount).toBe('number');
+      });
   });
 
   afterEach(async () => {

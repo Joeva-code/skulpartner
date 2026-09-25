@@ -59,7 +59,7 @@ function AuthScreenInner({
           </h1>
           <p className="mt-2 text-sm text-gray-500">
             Sign in with your email address or User ID to manage your education
-            investment.
+            contributions.
           </p>
 
           <div className="mt-5">
@@ -74,8 +74,8 @@ function AuthScreenInner({
             Create your account
           </h1>
           <p className="mt-2 text-sm text-gray-500">
-            Start investing in your child&apos;s education today. It takes less
-            than 10 minutes.
+            Start contributing to your child&apos;s education today. It takes
+            less than 10 minutes.
           </p>
 
           <RegisterForm />
