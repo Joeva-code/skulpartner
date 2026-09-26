@@ -105,6 +105,10 @@ function fetchAll() {
 
 type FetchAllResult = Awaited<ReturnType<typeof fetchAll>>;
 
+function describe(reason: unknown, fallback: string): string {
+  return reason instanceof Error && reason.message ? reason.message : fallback;
+}
+
 function applyResults(
   [summaryResult, listResult, txResult]: FetchAllResult,
   setSummary: (value: ContributionsSummary) => void,
@@ -112,22 +116,32 @@ function applyResults(
   setTransactions: (value: WalletTransaction[]) => void,
   setError: (value: string) => void,
 ) {
+  // Every endpoint is reported. Swallowing a failure would render a 4xx/5xx
+  // as the "No transactions yet" empty state, hiding the real cause.
+  const failures: string[] = [];
+
   if (summaryResult.status === 'fulfilled') {
     setSummary(summaryResult.value);
   } else {
-    setError(
-      summaryResult.reason instanceof Error
-        ? summaryResult.reason.message
-        : 'Failed to load your contributions',
-    );
+    failures.push(describe(summaryResult.reason, 'Failed to load your contributions'));
   }
 
   if (listResult.status === 'fulfilled') {
     setContributions(listResult.value);
+  } else {
+    failures.push(describe(listResult.reason, 'Failed to load your contributions'));
   }
 
   if (txResult.status === 'fulfilled') {
     setTransactions(txResult.value);
+  } else {
+    failures.push(
+      describe(txResult.reason, 'Failed to load your transactions'),
+    );
+  }
+
+  if (failures.length > 0) {
+    setError(failures.join(' · '));
   }
 }
 

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsIn,
   IsInt,
@@ -31,6 +32,12 @@ export class CreateContributionDto {
 }
 
 export class ListContributionsQueryDto {
+  /**
+   * @Type(() => Number) is required: query params arrive as strings, and the
+   * global ValidationPipe sets `transform: true` but not
+   * `enableImplicitConversion`, so @IsInt() would otherwise reject "?limit=20".
+   */
+  @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(100)
@@ -38,6 +45,7 @@ export class ListContributionsQueryDto {
 }
 
 export class ListWalletTransactionsQueryDto {
+  @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(100)
