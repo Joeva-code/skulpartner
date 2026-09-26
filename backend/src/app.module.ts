@@ -5,9 +5,16 @@ import { PrismaModule } from './prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { SettingsModule } from './settings/settings.module.js';
 import { OnboardingModule } from './onboarding/onboarding.module.js';
+import { ContributionsModule } from './contributions/contributions.module.js';
 
 @Module({
-  imports: [PrismaModule, AuthModule, SettingsModule, OnboardingModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    SettingsModule,
+    OnboardingModule,
+    ContributionsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
