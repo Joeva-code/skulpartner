@@ -14,6 +14,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
+      'https://skulpartner.vercel.app',
       'https://skulpartner-1.onrender.com',
       ...allowedOrigins,
     ],
