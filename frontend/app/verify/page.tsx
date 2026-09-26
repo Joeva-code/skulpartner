@@ -115,9 +115,17 @@ export default function VerifyPage() {
   }
 
   useEffect(() => {
-    if (user) {
-      refreshStatus().catch(() => undefined);
-    }
+    if (!user) return;
+    let cancelled = false;
+    api
+      .get<OnboardingStatus>('/onboarding/status')
+      .then((s) => {
+        if (!cancelled) setStatus(s);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   async function requestOtp(channel: 'EMAIL' | 'PHONE') {

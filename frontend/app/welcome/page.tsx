@@ -46,10 +46,10 @@ export default function WelcomePage() {
         </div>
 
         <button
-          onClick={() => router.push('/login')}
+          onClick={() => router.push('/dashboard')}
           className="w-full rounded-xl bg-[#1c1c1c] px-4 py-3 font-semibold text-white transition hover:bg-[#333333]"
         >
-          Go to Log in
+          Go to your dashboard
         </button>
 
         <p className="text-center text-sm text-gray-500">

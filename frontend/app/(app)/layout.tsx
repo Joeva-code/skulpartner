@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { fetchMe } from '@/lib/api';
+import { api, fetchMe } from '@/lib/api';
 import type { MeUser } from '@/lib/api';
+import { getNextOnboardingStep } from '@/lib/use-onboarding-status';
+import type { OnboardingStatus } from '@/lib/use-onboarding-status';
 
-const navItems = [
+const baseNavItems = [
   { href: '/dashboard', label: 'Home' },
   { href: '/school-fees', label: 'School Fees' },
   { href: '/transactions', label: 'Transactions' },
@@ -19,16 +21,39 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<MeUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [onboardingHref, setOnboardingHref] = useState('/onboarding');
+  const [onboardingDone, setOnboardingDone] = useState(false);
 
   useEffect(() => {
     fetchMe()
-      .then(setUser)
+      .then((me) => {
+        setUser(me);
+        api
+          .get<OnboardingStatus>('/onboarding/status')
+          .then((s) => {
+            setOnboardingHref(getNextOnboardingStep(s).href);
+            setOnboardingDone(getNextOnboardingStep(s).key === 'done');
+          })
+          .catch(() => undefined);
+      })
       .catch(() => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
         router.push('/login');
       });
   }, [router]);
+
+  const navItems: { href: string; label: string; target?: string }[] = [
+    { href: baseNavItems[0].href, label: baseNavItems[0].label },
+    {
+      href: '/onboarding',
+      label: onboardingDone ? 'Onboarding ✓' : 'Onboarding • Continue',
+      target: onboardingHref,
+    },
+    { href: baseNavItems[1].href, label: baseNavItems[1].label },
+    { href: baseNavItems[2].href, label: baseNavItems[2].label },
+    { href: baseNavItems[3].href, label: baseNavItems[3].label },
+  ];
 
   function handleLogout() {
     localStorage.removeItem('accessToken');
@@ -58,19 +83,29 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </div>
 
         <nav className="flex flex-col gap-1 px-3">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                pathname === item.href
-                  ? 'bg-[#f1f7ed] text-[#3f5a2e]'
-                  : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const linkHref = item.target ?? item.href;
+            const isActive =
+              pathname === item.href ||
+              pathname === linkHref ||
+              (item.href === '/onboarding' &&
+                ['/verify', '/kyc', '/beneficiary', '/next-of-kin', '/consent', '/welcome'].includes(
+                  pathname ?? '',
+                ));
+            return (
+              <Link
+                key={item.href}
+                href={linkHref}
+                className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                  isActive
+                    ? 'bg-[#f1f7ed] text-[#3f5a2e]'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="mt-auto px-6 py-6">
@@ -121,10 +156,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               {navItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={item.target ?? item.href}
                   onClick={() => setMenuOpen(false)}
                   className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                    pathname === item.href
+                    pathname === item.href || pathname === (item.target ?? item.href)
                       ? 'bg-[#f1f7ed] text-[#3f5a2e]'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}

@@ -61,7 +61,7 @@ export default function RegisterForm() {
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      router.push('/verify');
+      router.push('/dashboard');
     } catch (err) {
       setError(
         err instanceof Error

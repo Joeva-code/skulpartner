@@ -33,11 +33,14 @@ export default function LoginForm() {
         message: string;
         accessToken: string;
         user: LoginUser;
-      }>('/auth/login', { identifier, password });
+      }>('/auth/login', { identifier, password }, { auth: false });
 
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
 
+      // After sign-in, always land on the dashboard first.
+      // The dashboard owns the only Onboarding tab/button, so a user
+      // can only discover/navigate onboarding after register + sign-in.
       router.push('/dashboard');
     } catch (err) {
       setError(
@@ -122,3 +125,4 @@ export default function LoginForm() {
     </form>
   );
 }
+
