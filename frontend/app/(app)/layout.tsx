@@ -21,7 +21,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [user, setUser] = useState<MeUser | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [onboardingHref, setOnboardingHref] = useState('/onboarding');
   const [onboardingDone, setOnboardingDone] = useState(false);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         api
           .get<OnboardingStatus>('/onboarding/status')
           .then((s) => {
-            setOnboardingHref(getNextOnboardingStep(s).href);
             setOnboardingDone(getNextOnboardingStep(s).key === 'done');
           })
           .catch(() => undefined);
@@ -43,12 +41,25 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       });
   }, [router]);
 
-  const navItems: { href: string; label: string; target?: string }[] = [
+  // The Onboarding tab always points at /onboarding (the entry page that
+  // forwards to the next incomplete step). It must NEVER point at
+  // /dashboard — otherwise it collides with Home and both tabs render
+  // as active on the same screen.
+  const wizardPaths = [
+    '/onboarding',
+    '/verify',
+    '/kyc',
+    '/beneficiary',
+    '/next-of-kin',
+    '/consent',
+    '/welcome',
+  ];
+
+  const navItems: { href: string; label: string }[] = [
     { href: baseNavItems[0].href, label: baseNavItems[0].label },
     {
       href: '/onboarding',
       label: onboardingDone ? 'Onboarding ✓' : 'Onboarding • Continue',
-      target: onboardingHref,
     },
     { href: baseNavItems[1].href, label: baseNavItems[1].label },
     { href: baseNavItems[2].href, label: baseNavItems[2].label },
@@ -84,18 +95,14 @@ export default function AppLayout({ children }: { children: ReactNode }) {
 
         <nav className="flex flex-col gap-1 px-3">
           {navItems.map((item) => {
-            const linkHref = item.target ?? item.href;
             const isActive =
               pathname === item.href ||
-              pathname === linkHref ||
               (item.href === '/onboarding' &&
-                ['/verify', '/kyc', '/beneficiary', '/next-of-kin', '/consent', '/welcome'].includes(
-                  pathname ?? '',
-                ));
+                wizardPaths.includes(pathname ?? ''));
             return (
               <Link
                 key={item.href}
-                href={linkHref}
+                href={item.href}
                 className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
                   isActive
                     ? 'bg-[#f1f7ed] text-[#3f5a2e]'
@@ -156,10 +163,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
               {navItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.target ?? item.href}
+                  href={item.href}
                   onClick={() => setMenuOpen(false)}
                   className={`rounded-xl px-4 py-3 text-sm font-semibold ${
-                    pathname === item.href || pathname === (item.target ?? item.href)
+                    pathname === item.href ||
+                    (item.href === '/onboarding' &&
+                      wizardPaths.includes(pathname ?? ''))
                       ? 'bg-[#f1f7ed] text-[#3f5a2e]'
                       : 'text-gray-600 hover:bg-gray-50'
                   }`}
